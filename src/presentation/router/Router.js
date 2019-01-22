@@ -38,6 +38,10 @@ export default class Router {
     component.props.navigation.navigate('AddFeed')
   }
 
+  goBack(component) {
+    component.props.navigation.goBack()
+  }
+
   _injectIntoFeedsComponent = FeedsComponent => {
     const viewModelFactory = this.viewModelFactory
     const router = this
@@ -88,13 +92,14 @@ export default class Router {
 
   _injectIntoAddFeedComponent = AddFeedComponent => {
     const viewModelFactory = this.viewModelFactory
+    const router = this
     return class extends Component {
       static navigationOptions = AddFeedComponent.navigationOptions;
       render() {
         return (
           <AddFeedComponent
             {...this.props}
-            addFeedViewModel={viewModelFactory.addFeedViewModel()}/>
+            addFeedViewModel={viewModelFactory.addFeedViewModel(router)}/>
         )
       }
     }

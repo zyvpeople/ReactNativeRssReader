@@ -69,8 +69,21 @@ export class FeedService {
     //TODO:
   }
 
-  createFeed(feed) {
-    //TODO:
+  async createFeed(feedUrl) {
+    if (feedUrl === '') {
+      throw "Feed url is empty"
+    }
+    let exists = await this.feedLocalRepository.feedWithUrlExists(feedUrl)
+    if (exists) {
+      return
+    }
+    let feedAndFeedItems = await this.feedRemoteRepository.feedAndFeedItems(feedUrl)
+    let feed = await this.feedLocalRepository.createOrUpdateFeed(feedAndFeedItems.feed)
+    var feedItems = feedAndFeedItems.feedItems
+    feedItems.forEach(item => {item.feedId = feed.id})
+    await this.feedLocalRepository.createOrUpdateFeedItems(feedItems)
+    console.log(feed)
+    return null
   }
 
   removeFeed(feedId) {

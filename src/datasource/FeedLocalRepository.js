@@ -25,8 +25,8 @@ export class FeedLocalRepository {
     this.feedItemsChangedObservable = new Observable()
   }
 
-  createFeed(feed) {
-    //TODO:
+  async createOrUpdateFeed(feed) {
+    return feed
   }
 
   removeFeed(feedId) {
@@ -37,8 +37,12 @@ export class FeedLocalRepository {
     return this._feeds
   }
 
-  createOrUpdateFeedItems(feedId, feedItems) {
-    //TODO:
+  async feedWithUrlExists(feedUrl) {
+    return false
+  }
+
+  async createOrUpdateFeedItems(feedItems) {
+    return null
   }
 
   async feedItems(feedId) {

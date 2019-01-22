@@ -28,7 +28,7 @@ export default class ViewModelFactory {
     return new FeedItemViewModel(feedItemId, this.feedService)
   }
 
-  addFeedViewModel() {
-    return new AddFeedViewModel(this.feedService)
+  addFeedViewModel(router) {
+    return new AddFeedViewModel(this.feedService, router)
   }
 }

@@ -12,8 +12,8 @@ export default class FeedsComponent extends Component {
           title="Add"
           onPress={ () => navigation.getParam('onAddFeedPressed')()}/>
       )
-    };
-  };
+    }
+  }
 
   constructor(props) {
     super(props)
