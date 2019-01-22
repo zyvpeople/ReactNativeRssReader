@@ -31,7 +31,31 @@ export class FeedService {
       return
     }
     this._setIsSyncAndNotify(true)
-    //TODO:
+    // this
+    //   .feedLocalRepository
+    //   .feeds()
+    //   .then(feeds => {
+    //
+    //   })
+    // [self.feedRemoteRepository feedItemsForFeedUrl:feedUrl completion:[[^(NSArray<FeedItemRemoteDto *> *feedItemRemoteDtos, NSError *error) {
+    //         if (!error) {
+    //             NSArray<FeedItemRemoteDto *> *validDtos = [weakSelf filterValidFeedItemRemoteDtos:feedItemRemoteDtos];
+    //             [weakSelf.feedLocalRepository saveFeedItems:validDtos forFeedUrl:feedUrl completion:[[^(NSError *error) {
+    //                 [weakSelf setIsSyncAndNotify:NO];
+    //                 if (error) {
+    //                     [weakSelf.logger errorWithError:error
+    //                                             message:@"Error save feed items into local repository"];
+    //                     [weakSelf notifyOnSyncFailed:error];
+    //                 }
+    //             } copy] autorelease]];
+    //         } else {
+    //             [weakSelf.logger errorWithError:error
+    //                                     message:@"Error load feed items from remote repository"];
+    //             [weakSelf setIsSyncAndNotify:NO];
+    //             [weakSelf notifyOnSyncFailed:error];
+    //         }
+    //     } copy] autorelease]];
+
   }
 
   syncFeed(feedId) {
@@ -53,12 +77,16 @@ export class FeedService {
     //TODO:
   }
 
-  feeds() {
-    //TODO:
+  async feeds() {
+    return this.feedLocalRepository.feeds()
   }
 
-  feedItems(feedId, searchText) {
-    //TODO:
+  async feedItems(feedId) {
+    return this.feedLocalRepository.feedItems(feedId)
+  }
+
+  async feedItem(feedItemId) {
+    return this.feedLocalRepository.feedItem(feedItemId)
   }
 
   _setIsSyncAndNotify(isSync) {

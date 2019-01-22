@@ -1,41 +1,36 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import NetworkService from '../domain/service/NetworkService'
 
 export default class OnlineStatusComponent extends Component {
 
   constructor(props) {
     super(props)
-    this.state = { isOnline: false }
-    this.networkService = this.props.networkService
-    this.unsubscribe = this
-      .networkService
-      .onlineStatusChanged
-      .subscribe(this._onOnlineStatusChanged)
+    this.state = { visible: false }
+    this.onlineStatusViewModel = this.props.onlineStatusViewModel
+    this.unsubscribeFromViewModel = this
+      .onlineStatusViewModel
+      .visible
+      .subscribe(visible => this.setState({ visible: visible}))
   }
 
   componentDidMount() {
-    this._onOnlineStatusChanged()
+    this.onlineStatusViewModel.onCreated()
   }
 
   componentWillUnmount() {
-    this.unsubscribe()
-  }
-
-  _onOnlineStatusChanged = () => {
-    this.setState({ isOnline: this.networkService.isOnline })
+    this.onlineStatusViewModel.onDestroyed()
+    this.unsubscribeFromViewModel()
   }
 
   render() {
-    if (this.state.isOnline) {
-      return null
-    } else {
+    if (this.state.visible) {
       return (
         <View style={styles.container}>
           <Text style={styles.text}>No Internet connection</Text>
         </View>
       )
     }
+    return null
   }
 }
 

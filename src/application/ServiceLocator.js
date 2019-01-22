@@ -2,14 +2,13 @@ import { FeedLocalRepository } from '../datasource/FeedLocalRepository';
 import { FeedRemoteRepository } from '../datasource/FeedRemoteRepository';
 import Logger from '../datasource/Logger';
 import { FeedService } from '../domain/service/FeedService';
-import { ImageService } from '../domain/service/ImageService';
 import NetworkService from '../domain/service/NetworkService';
+import ViewModelFactory from '../presentation/ViewModelFactory';
 
-export class ServiceLocator {
+export default class ServiceLocator {
   constructor() {
     this.logger = new Logger()
     this.networkService = new NetworkService()
-    this.imageService = new ImageService()
     this.feedLocalRepository = new FeedLocalRepository()
     this.feedRemoteRepository = new FeedRemoteRepository()
     this.feedService = new FeedService(
@@ -17,5 +16,8 @@ export class ServiceLocator {
       this.feedRemoteRepository,
       this.networkService,
       this.logger)
+    this.viewModelFactory = new ViewModelFactory(
+      this.networkService,
+      this.feedService)
   }
 }

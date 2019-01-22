@@ -1,4 +1,4 @@
-export class RemoteFeedItem {
+export default class RemoteFeedItem {
   constructor(title, summary, dateTime, url, imageUrl) {
     this.title = title
     this.summary = summary
