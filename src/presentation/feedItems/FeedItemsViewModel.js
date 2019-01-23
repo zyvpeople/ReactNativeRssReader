@@ -9,6 +9,7 @@ export default class FeedItemsViewModel {
     this.feedItems = new Observable()
     this.progress = new Observable()
     this.syncError = new Observable()
+    this.deleteFeedError = new Observable()
     this._unsubscribeFeedItemsChanged = this
       .feedService
       .feedItemsChangedObservable
@@ -40,6 +41,17 @@ export default class FeedItemsViewModel {
 
   onFeedItemPressed = (component, feedItem) => {
     this.router.goToFeedItem(component, feedItem.id)
+  }
+
+  onDeleteFeedPressed(component) {
+    this
+      .feedService
+      .removeFeed(this.feedId)
+      .then(event => this.router.goBack(component))
+      .catch(error => {
+        console.warn(error)
+        this.deleteFeedError.onNext(null)
+      })
   }
 
   _onFeedItemsChanged = () => {

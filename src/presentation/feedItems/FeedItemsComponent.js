@@ -1,10 +1,19 @@
 import React, {Component} from 'react'
-import {StyleSheet, FlatList, View, Text, TouchableOpacity, Alert} from 'react-native'
+import {StyleSheet, FlatList, View, Text, TouchableOpacity, Alert, Button} from 'react-native'
 import OnlineStatusComponent from '../onlineStatus/OnlineStatusComponent'
 
 export default class FeedItemsComponent extends Component {
 
-  static navigationOptions = { title: 'Feed items' }
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'Feed items',
+      headerRight: (
+        <Button
+          title='Delete'
+          onPress={ () => navigation.getParam('onDeleteFeedPressed')()}/>
+      )
+    }
+  }
 
   constructor(props) {
     super(props)
@@ -30,9 +39,18 @@ export default class FeedItemsComponent extends Component {
           'Error',
           'Error sync feed',
           [{text:'Ok'}]))
+      this.unsubscribeFromDeleteFeedError = this
+        .feedItemsViewModel
+        .deleteFeedError
+        .subscribe(event =>
+          Alert.alert(
+            'Error',
+            'Error delete feed',
+            [{text:'Ok'}]))
   }
 
   componentDidMount() {
+    this.props.navigation.setParams({ onDeleteFeedPressed: this._onDeleteFeedPressed });
     this.feedItemsViewModel.onCreated()
   }
 
@@ -41,6 +59,7 @@ export default class FeedItemsComponent extends Component {
     this.unsubscribeFromFeedItems()
     this.unsubscribeFromProgress()
     this.unsubscribeFromSyncError()
+    this.unsubscribeFromDeleteFeedError()
   }
 
   render() {
@@ -66,6 +85,8 @@ export default class FeedItemsComponent extends Component {
       onPress={() => this.feedItemsViewModel.onFeedItemPressed(this, item)}>
       <Text>{item.title}</Text>
     </TouchableOpacity>
+
+  _onDeleteFeedPressed = () => this.feedItemsViewModel.onDeleteFeedPressed(this)
 }
 
 const styles = StyleSheet.create({

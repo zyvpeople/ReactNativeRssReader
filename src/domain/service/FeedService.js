@@ -86,8 +86,8 @@ export class FeedService {
     return null
   }
 
-  removeFeed(feedId) {
-    //TODO:
+  async removeFeed(feedId) {
+    return null
   }
 
   async feeds() {
