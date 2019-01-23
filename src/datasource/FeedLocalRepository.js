@@ -6,12 +6,9 @@ export class FeedLocalRepository {
   constructor(logger) {
     this.logger = logger
     this._feeds = [
-      new Feed(0, "1", ""),
-      new Feed(1, "2", ""),
-      new Feed(2, "3", ""),
-      new Feed(3, "4", ""),
-      new Feed(4, "5", ""),
-      new Feed(5, "6", "")
+      new Feed(0, "1", "http://feeds.bbci.co.uk/news/rss.xml"),
+      new Feed(1, "2", "http://feeds.bbci.co.uk/news/world/rss.xml"),
+      new Feed(2, "3", "http://feeds.bbci.co.uk/news/uk/rss.xml")
     ]
     this._feedItems = [
       new FeedItem(0, "0", "0", 0, "0", "0", 0),
@@ -29,12 +26,17 @@ export class FeedLocalRepository {
     return feed
   }
 
-  removeFeed(feedId) {
-    //TODO:
+  async removeFeed(feedId) {
+    return null
   }
 
   async feeds() {
     return this._feeds
+  }
+
+  async findFeed(feedId) {
+    return null
+    // return new Feed(0, "1", "http://feeds.bbci.co.uk/news/rss.xml")
   }
 
   async feedWithUrlExists(feedUrl) {
@@ -49,7 +51,7 @@ export class FeedLocalRepository {
     return this._feedItems
   }
 
-  async feedItem(feedItemId) {
+  async findFeedItem(feedItemId) {
     return new FeedItem(
       0,
       "Title",

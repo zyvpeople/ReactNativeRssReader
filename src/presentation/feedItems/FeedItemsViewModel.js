@@ -48,10 +48,7 @@ export default class FeedItemsViewModel {
       .feedService
       .removeFeed(this.feedId)
       .then(event => this.router.goBack(component))
-      .catch(error => {
-        console.warn(error)
-        this.deleteFeedError.onNext(null)
-      })
+      .catch(error => this.deleteFeedError.onNext(error))
   }
 
   _onFeedItemsChanged = () => {

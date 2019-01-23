@@ -9,7 +9,7 @@ export class FeedService {
     this.feedRemoteRepository = feedRemoteRepository
     this.networkService = networkService
     this.logger = logger
-    this.feedsChangedObservable = new Observable()
+    this.feedsChangedObservable = feedLocalRepository.feedsChangedObservable
     this.feedItemsChangedObservable = new Observable()
     this.syncStatusChangedObservable = new Observable()
     this.syncErrorObservable = new Observable()
@@ -31,31 +31,15 @@ export class FeedService {
       return
     }
     this._setIsSyncAndNotify(true)
-    // this
-    //   .feedLocalRepository
-    //   .feeds()
-    //   .then(feeds => {
-    //
-    //   })
-    // [self.feedRemoteRepository feedItemsForFeedUrl:feedUrl completion:[[^(NSArray<FeedItemRemoteDto *> *feedItemRemoteDtos, NSError *error) {
-    //         if (!error) {
-    //             NSArray<FeedItemRemoteDto *> *validDtos = [weakSelf filterValidFeedItemRemoteDtos:feedItemRemoteDtos];
-    //             [weakSelf.feedLocalRepository saveFeedItems:validDtos forFeedUrl:feedUrl completion:[[^(NSError *error) {
-    //                 [weakSelf setIsSyncAndNotify:NO];
-    //                 if (error) {
-    //                     [weakSelf.logger errorWithError:error
-    //                                             message:@"Error save feed items into local repository"];
-    //                     [weakSelf notifyOnSyncFailed:error];
-    //                 }
-    //             } copy] autorelease]];
-    //         } else {
-    //             [weakSelf.logger errorWithError:error
-    //                                     message:@"Error load feed items from remote repository"];
-    //             [weakSelf setIsSyncAndNotify:NO];
-    //             [weakSelf notifyOnSyncFailed:error];
-    //         }
-    //     } copy] autorelease]];
-
+    this
+      .feedLocalRepository
+      .feeds()
+      .then(feeds => Promise.all(feeds.map(async (feed) => this._syncFeed(feed))))
+      .then(event => this._setIsSyncAndNotify(false))
+      .catch(error => {
+        this._setIsSyncAndNotify(false)
+        this.syncErrorObservable.onNext(error)
+      })
   }
 
   syncFeed(feedId) {
@@ -66,7 +50,22 @@ export class FeedService {
       return
     }
     this._setIsSyncAndNotify(true)
-    //TODO:
+    this
+      .feedLocalRepository
+      .findFeed(feedId)
+      .then(feed => feed === null ? Promise.resolve(null) : this._syncFeed(feed))
+      .then(event => this._setIsSyncAndNotify(false))
+      .catch(error => {
+        this._setIsSyncAndNotify(false)
+        this.syncErrorObservable.onNext(error)
+      })
+  }
+
+  async _syncFeed(feed) {
+    const feedAndFeedItems = await this.feedRemoteRepository.feedAndFeedItems(feed.url)
+    var feedItems = feedAndFeedItems.feedItems
+    feedItems.forEach(item => {item.feedId = feed.id})
+    await this.feedLocalRepository.createOrUpdateFeedItems(feedItems)
   }
 
   async createFeed(feedUrl) {
@@ -82,12 +81,10 @@ export class FeedService {
     var feedItems = feedAndFeedItems.feedItems
     feedItems.forEach(item => {item.feedId = feed.id})
     await this.feedLocalRepository.createOrUpdateFeedItems(feedItems)
-    console.log(feed)
-    return null
   }
 
   async removeFeed(feedId) {
-    return null
+    return this.feedLocalRepository.removeFeed(feedId)
   }
 
   async feeds() {
@@ -98,8 +95,8 @@ export class FeedService {
     return this.feedLocalRepository.feedItems(feedId)
   }
 
-  async feedItem(feedItemId) {
-    return this.feedLocalRepository.feedItem(feedItemId)
+  async findFeedItem(feedItemId) {
+    return this.feedLocalRepository.findFeedItem(feedItemId)
   }
 
   _setIsSyncAndNotify(isSync) {

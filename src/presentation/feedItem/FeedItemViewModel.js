@@ -14,10 +14,13 @@ export default class FeedItemViewModel {
   onCreated() {
     this
       .feedService
-      .feedItem(this.feedItemId)
+      .findFeedItem(this.feedItemId)
       .then(item => {
         this._feedItem = item
         this.feedItem.onNext(item)
+        if (item === null) {
+          this.loadFeedItemError.onNext(null)
+        }
       })
       .catch(error => this.loadFeedItemError.onNext(null))
   }
