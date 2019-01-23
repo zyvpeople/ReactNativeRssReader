@@ -1,9 +1,24 @@
 import React, {Component} from 'react'
-import {StyleSheet, View, Text, Alert} from 'react-native'
+import {StyleSheet, View, Text, Alert, Button} from 'react-native'
 
 export default class FeedItemComponent extends Component {
 
-  static navigationOptions = { title: 'Feed item' }
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'Feed item',
+      headerRight: (
+        <View
+          style={styles.rightHeaderContainer}>
+          <Button
+            title='Browser'
+            onPress={() => navigation.getParam('onOpenInBrowserPressed')()}/>
+          <Button
+            title='Share'
+            onPress={() => navigation.getParam('onSharePressed')()}/>
+        </View>
+      )
+    }
+  }
 
   constructor(props) {
     super(props)
@@ -27,6 +42,8 @@ export default class FeedItemComponent extends Component {
   }
 
   componentDidMount() {
+    this.props.navigation.setParams({onOpenInBrowserPressed: this._onOpenInBrowserPressed})
+    this.props.navigation.setParams({onSharePressed: this._onSharePressed})
     this.feedItemViewModel.onCreated()
   }
 
@@ -47,9 +64,17 @@ export default class FeedItemComponent extends Component {
       </View>
     )
   }
+
+  _onOpenInBrowserPressed = () => this.feedItemViewModel.onOpenInBrowserPressed(this)
+
+  _onSharePressed = () => this.feedItemViewModel.onSharePressed()
 }
 
 const styles = StyleSheet.create({
+  rightHeaderContainer: {
+    flex: 1,
+    flexDirection: 'row'
+  },
   container: {
     flex: 1
   }

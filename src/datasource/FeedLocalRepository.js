@@ -50,6 +50,6 @@ export class FeedLocalRepository {
   }
 
   async feedItem(feedItemId) {
-    return new FeedItem(0, "0", "0", 0, "0", "0", 0)
+    return new FeedItem(0, "0", "0", 0, "https://github.com/facebook/react-native/issues/19986", "0", 0)
   }
 }

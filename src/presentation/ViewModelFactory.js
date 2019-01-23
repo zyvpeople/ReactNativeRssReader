@@ -3,6 +3,7 @@ import FeedsViewModel from './feeds/FeedsViewModel'
 import FeedItemsViewModel from './feedItems/FeedItemsViewModel'
 import FeedItemViewModel from './feedItem/FeedItemViewModel'
 import AddFeedViewModel from './addFeed/AddFeedViewModel'
+import BrowserViewModel from './browser/BrowserViewModel'
 
 export default class ViewModelFactory {
 
@@ -24,11 +25,15 @@ export default class ViewModelFactory {
     return new FeedItemsViewModel(feedId, this.feedService, router)
   }
 
-  feedItemViewModel(feedItemId) {
-    return new FeedItemViewModel(feedItemId, this.feedService)
+  feedItemViewModel(feedItemId, router) {
+    return new FeedItemViewModel(feedItemId, this.feedService, router)
   }
 
   addFeedViewModel(router) {
     return new AddFeedViewModel(this.feedService, router)
+  }
+
+  browserViewModel(url, router) {
+    return new BrowserViewModel(url, router)
   }
 }

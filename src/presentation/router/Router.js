@@ -4,6 +4,7 @@ import FeedsComponent from '../feeds/FeedsComponent'
 import FeedItemsComponent from '../feedItems/FeedItemsComponent'
 import FeedItemComponent from '../feedItem/FeedItemComponent'
 import AddFeedComponent from '../addFeed/AddFeedComponent'
+import BrowserComponent from '../browser/BrowserComponent'
 
 export default class Router {
 
@@ -18,7 +19,8 @@ export default class Router {
           Feeds: {screen: this._injectIntoFeedsComponent(FeedsComponent)},
           FeedItems: {screen: this._injectIntoFeedItemsComponent(FeedItemsComponent)},
           FeedItem: {screen: this._injectIntoFeedItemComponent(FeedItemComponent)},
-          AddFeed: {screen: this._injectIntoAddFeedComponent(AddFeedComponent)}
+          AddFeed: {screen: this._injectIntoAddFeedComponent(AddFeedComponent)},
+          Browser: {screen: this._injectIntoBrowserComponent(BrowserComponent)}
         },
         {
           initialRouteName: 'Feeds'
@@ -36,6 +38,10 @@ export default class Router {
 
   goToAddFeed(component) {
     component.props.navigation.navigate('AddFeed')
+  }
+
+  goToBrowser(component, url) {
+    component.props.navigation.navigate('Browser', { url: url })
   }
 
   goBack(component) {
@@ -77,6 +83,7 @@ export default class Router {
 
   _injectIntoFeedItemComponent = FeedItemComponent => {
     const viewModelFactory = this.viewModelFactory
+    const router = this
     return class extends Component {
       static navigationOptions = FeedItemComponent.navigationOptions;
       render() {
@@ -84,7 +91,7 @@ export default class Router {
         return (
           <FeedItemComponent
             {...this.props}
-            feedItemViewModel={viewModelFactory.feedItemViewModel(feedItemId)}/>
+            feedItemViewModel={viewModelFactory.feedItemViewModel(feedItemId, router)}/>
         )
       }
     }
@@ -100,6 +107,22 @@ export default class Router {
           <AddFeedComponent
             {...this.props}
             addFeedViewModel={viewModelFactory.addFeedViewModel(router)}/>
+        )
+      }
+    }
+  }
+
+  _injectIntoBrowserComponent = BrowserComponent => {
+    const viewModelFactory = this.viewModelFactory
+    const router = this
+    return class extends Component {
+      static navigationOptions = BrowserComponent.navigationOptions;
+      render() {
+        const url = this.props.navigation.getParam('url', "")
+        return (
+          <BrowserComponent
+            {...this.props}
+            browserViewModel={viewModelFactory.browserViewModel(url, router)}/>
         )
       }
     }
