@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {StyleSheet, View, Text, Alert, Button} from 'react-native'
+import {StyleSheet, View, Text, Alert, Button, Share, ScrollView, Image} from 'react-native'
 
 export default class FeedItemComponent extends Component {
 
@@ -38,7 +38,16 @@ export default class FeedItemComponent extends Component {
           'Error',
           'Error load feed item',
           [{text:'Ok'}]))
-          //TODO: handle click. make not dismissable
+      this.unsubscribeFromShareUrl = this
+        .feedItemViewModel
+        .shareUrl
+        .subscribe(url => {
+          Share.share({
+            message: url,
+            url: url,
+            title: 'Share URL'
+          })
+        })
   }
 
   componentDidMount() {
@@ -58,10 +67,15 @@ export default class FeedItemComponent extends Component {
       return null
     }
     return (
-      <View
+      <ScrollView
         style={styles.container}>
+        <Image
+          style={styles.image}
+          source={{uri: this.state.feedItem.imageUrl}}/>
         <Text>{this.state.feedItem.title}</Text>
-      </View>
+        <Text>{this.state.feedItem.dateTime}</Text>
+        <Text>{this.state.feedItem.summary}</Text>
+      </ScrollView>
     )
   }
 
@@ -77,5 +91,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1
+  },
+  image: {
+    height: 200
   }
 })

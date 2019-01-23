@@ -8,6 +8,7 @@ export default class FeedItemViewModel {
     this.router = router
     this.feedItem = new Observable()
     this.loadFeedItemError = new Observable()
+    this.shareUrl = new Observable()
   }
 
   onCreated() {
@@ -35,5 +36,6 @@ export default class FeedItemViewModel {
     if (this._feedItem === null) {
       return
     }
+    this.shareUrl.onNext(this._feedItem.url)
   }
 }

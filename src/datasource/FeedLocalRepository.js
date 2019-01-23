@@ -50,6 +50,13 @@ export class FeedLocalRepository {
   }
 
   async feedItem(feedItemId) {
-    return new FeedItem(0, "0", "0", 0, "https://github.com/facebook/react-native/issues/19986", "0", 0)
+    return new FeedItem(
+      0,
+      "Title",
+      "Summary Summary Summary Summary Summary Summary Summary Summary Summary Summary ",
+      0,
+      "https://github.com/facebook/react-native/issues/19986",
+      "https://1.bp.blogspot.com/-_0JXDpvIF1U/WaxcVIT7HxI/AAAAAAAAAnM/gSfCaKXo79ACEHN2LiERWPUV4nSGyYcsACLcBGAs/s1600/4_fraktal3608ab310dc594c738706a02f4962899f.jpg",
+      0)
   }
 }
