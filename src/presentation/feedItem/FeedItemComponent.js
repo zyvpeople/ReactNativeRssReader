@@ -73,7 +73,7 @@ export default class FeedItemComponent extends Component {
           style={styles.image}
           source={{uri: this.state.feedItem.imageUrl}}/>
         <Text>{this.state.feedItem.title}</Text>
-        <Text>{this.state.feedItem.dateTime}</Text>
+        <Text>{new Date(this.state.feedItem.dateTime).toLocaleString()}</Text>
         <Text>{this.state.feedItem.summary}</Text>
       </ScrollView>
     )

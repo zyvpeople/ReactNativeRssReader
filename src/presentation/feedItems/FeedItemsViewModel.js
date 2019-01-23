@@ -25,6 +25,7 @@ export default class FeedItemsViewModel {
   }
 
   onCreated() {
+    this.feedService.syncFeed(this.feedId)
     this._onFeedItemsChanged()
     this._onSyncStatusChanged()
   }

@@ -1,64 +1,236 @@
 import Observable from '../domain/common/Observable'
 import Feed from '../domain/entity/Feed'
 import FeedItem from '../domain/entity/FeedItem'
+import SQLite from 'react-native-sqlite-storage'
 
-export class FeedLocalRepository {
-  constructor(logger) {
-    this.logger = logger
-    this._feeds = [
-      new Feed(0, "1", "http://feeds.bbci.co.uk/news/rss.xml"),
-      new Feed(1, "2", "http://feeds.bbci.co.uk/news/world/rss.xml"),
-      new Feed(2, "3", "http://feeds.bbci.co.uk/news/uk/rss.xml")
-    ]
-    this._feedItems = [
-      new FeedItem(0, "0", "0", 0, "0", "0", 0),
-      new FeedItem(1, "1", "1", 1, "1", "1", 1),
-      new FeedItem(2, "2", "2", 2, "2", "2", 2),
-      new FeedItem(3, "3", "3", 3, "3", "3", 3),
-      new FeedItem(4, "4", "4", 4, "4", "4", 4),
-      new FeedItem(5, "5", "5", 5, "5", "5", 5)
-    ]
+export default class FeedLocalRepository {
+  constructor(database, logger) {
+    this.database = database
     this.feedsChangedObservable = new Observable()
     this.feedItemsChangedObservable = new Observable()
+    this.db = SQLite.openDatabase(
+      "rssReader.db",
+      "1.0",
+      "RssReader",
+      200000,
+      () => this.db.transaction(
+          tx => {
+            tx.executeSql(`CREATE TABLE IF NOT EXISTS Feeds (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              title TEXT NOT NULL,
+              url TEXT NOT NULL UNIQUE)`)
+            tx.executeSql(`CREATE TABLE IF NOT EXISTS FeedItems (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              title TEXT NOT NULL,
+              summary TEXT NOT NULL,
+              dateTime INTEGER,
+              url TEXT NOT NULL,
+              imageUrl TEXT NOT NULL,
+              feedId INTEGER,
+              UNIQUE (url, feedId),
+              CONSTRAINT fk_feeds
+                FOREIGN KEY (feedId)
+                REFERENCES Feeds(id)
+                ON DELETE CASCADE)`)
+          },
+          error => logger.e(error, 'Error create db'),
+          () => logger.d('Db created')
+        ),
+      error => logger.e(error, 'Error open db')
+    )
   }
 
   async createOrUpdateFeed(feed) {
-    return feed
+    return this
+      .database
+      .get()
+      .then(db =>
+        new Promise((resolve, reject) => db.transaction(
+          tx => tx.executeSql(`INSERT OR REPLACE INTO Feeds (title,url)
+                                VALUES (?, ?)`,
+                                [feed.title, feed.url]),
+          error => reject(error),
+          () => {
+            this.feedsChangedObservable.onNext(null)
+            resolve(null)
+          })
+        )
+      )
   }
 
   async removeFeed(feedId) {
-    return null
+    return this
+      .database
+      .get()
+      .then(db =>
+        new Promise((resolve, reject) => this.db.transaction(
+          tx => tx.executeSql('DELETE FROM Feeds WHERE id = ?', [feedId]),
+          error => reject(error),
+          () => {
+            this.feedsChangedObservable.onNext(null)
+            resolve(null)
+          }))
+      )
   }
 
   async feeds() {
-    return this._feeds
+    return this
+      .database
+      .get()
+      .then(db =>
+        new Promise((resolve, reject) => {
+          this.db.transaction(
+            tx => tx.executeSql(
+              'SELECT id, title, url FROM Feeds ORDER BY title ASC',
+              [],
+              (tx, results) => {
+                try {
+                  resolve(results
+                    .rows
+                    .raw()
+                    .map(row => new Feed(row.id, row.title, row.url)))
+                } catch (error) {
+                  reject(error)
+                }
+            }),
+            error => reject(error))
+        })
+      )
   }
 
   async findFeed(feedId) {
-    return null
-    // return new Feed(0, "1", "http://feeds.bbci.co.uk/news/rss.xml")
-  }
-
-  async feedWithUrlExists(feedUrl) {
-    return false
+    return this
+      .database
+      .get()
+      .then(db =>
+        new Promise((resolve, reject) => {
+          this.db.transaction(
+            tx => {
+              tx.executeSql(
+                'SELECT id, title, url FROM Feeds WHERE id = ? LIMIT 1',
+                [feedId],
+                (tx, results) => {
+                  try {
+                    if (results.rows.length == 1) {
+                      let row = results.rows.item(0)
+                      resolve(new Feed(row.id, row.title, row.url))
+                    } else {
+                      resolve(null)
+                    }
+                  } catch (error) {
+                    reject(error)
+                  }
+              })
+            },
+            error => reject(error))
+        })
+      )
   }
 
   async createOrUpdateFeedItems(feedItems) {
-    return null
+    return this
+      .database
+      .get()
+      .then(db =>
+        new Promise((resolve, reject) => this.db.transaction(
+          tx => {
+            feedItems.forEach(feedItem =>
+              tx.executeSql(`INSERT OR REPLACE INTO FeedItems (
+                              title, summary, dateTime, url, imageUrl, feedId)
+                              VALUES (?, ?, ?, ?, ?, ?)`,
+                              [
+                                feedItem.title,
+                                feedItem.summary,
+                                feedItem.dateTime,
+                                feedItem.url,
+                                feedItem.imageUrl,
+                                feedItem.feedId])
+            )
+          },
+          error => reject(error),
+          () => {
+            this.feedItemsChangedObservable.onNext(null)
+            resolve(null)
+          })
+        )
+      )
   }
 
   async feedItems(feedId) {
-    return this._feedItems
+    return this
+      .database
+      .get()
+      .then(db =>
+        new Promise((resolve, reject) => {
+          this.db.transaction(
+            tx => {
+              tx.executeSql(
+                `SELECT id, title, summary, dateTime, url, imageUrl, feedId
+                  FROM FeedItems
+                  WHERE feedId = ?
+                  ORDER BY dateTime DESC`,
+                [feedId],
+                (tx, results) => {
+                  try {
+                    resolve(results
+                      .rows
+                      .raw()
+                      .map(row => new FeedItem(
+                        row.id,
+                        row.title,
+                        row.summary,
+                        row.dateTime,
+                        row.url,
+                        row.imageUrl,
+                        row.feedId)))
+                  } catch (error) {
+                    reject(error)
+                  }
+              })
+            },
+            error => reject(error)
+          )
+        })
+      )
   }
 
   async findFeedItem(feedItemId) {
-    return new FeedItem(
-      0,
-      "Title",
-      "Summary Summary Summary Summary Summary Summary Summary Summary Summary Summary ",
-      0,
-      "https://github.com/facebook/react-native/issues/19986",
-      "https://1.bp.blogspot.com/-_0JXDpvIF1U/WaxcVIT7HxI/AAAAAAAAAnM/gSfCaKXo79ACEHN2LiERWPUV4nSGyYcsACLcBGAs/s1600/4_fraktal3608ab310dc594c738706a02f4962899f.jpg",
-      0)
+    return this
+      .database
+      .get()
+      .then(db =>
+        new Promise((resolve, reject) => {
+          this.db.transaction(
+            tx => {
+              tx.executeSql(
+                `SELECT id, title, summary, dateTime, url, imageUrl, feedId
+                  FROM FeedItems
+                  WHERE id = ?
+                  LIMIT 1`,
+                [feedItemId],
+                (tx, results) => {
+                  try {
+                    if (results.rows.length == 1) {
+                      let row = results.rows.item(0)
+                      resolve(new FeedItem(
+                        row.id,
+                        row.title,
+                        row.summary,
+                        row.dateTime,
+                        row.url,
+                        row.imageUrl,
+                        row.feedId))
+                    } else {
+                      resolve(null)
+                    }
+                  } catch (error) {
+                    reject(error)
+                  }
+              })
+            },
+            error => reject(error)
+          )
+        })
+      )
   }
 }

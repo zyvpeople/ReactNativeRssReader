@@ -1,4 +1,5 @@
-import { FeedLocalRepository } from '../datasource/FeedLocalRepository';
+import FeedLocalRepository from '../datasource/FeedLocalRepository';
+import Database from '../datasource/Database';
 import XmlFeedParser from '../datasource/XmlFeedParser';
 import FeedRemoteRepository from '../datasource/FeedRemoteRepository';
 import Logger from '../datasource/Logger';
@@ -10,7 +11,8 @@ export default class ServiceLocator {
   constructor() {
     this.logger = new Logger()
     this.networkService = new NetworkService()
-    this.feedLocalRepository = new FeedLocalRepository()
+    this.database = new Database(this.logger)
+    this.feedLocalRepository = new FeedLocalRepository(this.database, this.logger)
     this.feedRemoteRepository = new FeedRemoteRepository(new XmlFeedParser())
     this.feedService = new FeedService(
       this.feedLocalRepository,

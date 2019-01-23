@@ -35,8 +35,7 @@ export default class XmlFeedParser {
       0,
       itemDocument.getElementsByTagName("title")[0].firstChild.nodeValue,
       itemDocument.getElementsByTagName("description")[0].firstChild.nodeValue,
-      //TODO: convert date
-      itemDocument.getElementsByTagName("pubDate")[0].firstChild.nodeValue,
+      new Date(itemDocument.getElementsByTagName("pubDate")[0].firstChild.nodeValue).getTime(),
       itemDocument.getElementsByTagName("link")[0].firstChild.nodeValue,
       itemDocument.getElementsByTagName("media:thumbnail")[0].getAttribute("url"),
       0)

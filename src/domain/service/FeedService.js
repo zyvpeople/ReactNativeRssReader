@@ -10,7 +10,7 @@ export class FeedService {
     this.networkService = networkService
     this.logger = logger
     this.feedsChangedObservable = feedLocalRepository.feedsChangedObservable
-    this.feedItemsChangedObservable = new Observable()
+    this.feedItemsChangedObservable = feedLocalRepository.feedItemsChangedObservable
     this.syncStatusChangedObservable = new Observable()
     this.syncErrorObservable = new Observable()
     this.isSync = false
@@ -72,15 +72,8 @@ export class FeedService {
     if (feedUrl === '') {
       throw "Feed url is empty"
     }
-    let exists = await this.feedLocalRepository.feedWithUrlExists(feedUrl)
-    if (exists) {
-      return
-    }
     let feedAndFeedItems = await this.feedRemoteRepository.feedAndFeedItems(feedUrl)
-    let feed = await this.feedLocalRepository.createOrUpdateFeed(feedAndFeedItems.feed)
-    var feedItems = feedAndFeedItems.feedItems
-    feedItems.forEach(item => {item.feedId = feed.id})
-    await this.feedLocalRepository.createOrUpdateFeedItems(feedItems)
+    return await this.feedLocalRepository.createOrUpdateFeed(feedAndFeedItems.feed)
   }
 
   async removeFeed(feedId) {

@@ -23,6 +23,7 @@ export default class FeedsViewModel {
   }
 
   onCreated() {
+    this.feedService.syncAll()
     this._onFeedsChanged()
     this._onSyncStatusChanged()
   }
