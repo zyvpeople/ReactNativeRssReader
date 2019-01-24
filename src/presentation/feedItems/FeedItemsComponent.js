@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {StyleSheet, FlatList, View, Text, TouchableOpacity, Alert, Button, Image} from 'react-native'
+import {StyleSheet, FlatList, View, Text, TouchableOpacity, Alert, Image} from 'react-native'
 import OnlineStatusComponent from '../onlineStatus/OnlineStatusComponent'
 
 export default class FeedItemsComponent extends Component {
@@ -8,9 +8,12 @@ export default class FeedItemsComponent extends Component {
     return {
       title: 'Feed items',
       headerRight: (
-        <Button
-          title='Delete'
-          onPress={ () => navigation.getParam('onDeleteFeedPressed')()}/>
+        <TouchableOpacity
+          onPress={ () => navigation.getParam('onDeleteFeedPressed')()}>
+          <Image
+            style={styles.icon}
+            source={require('../resources/images/delete.png')}/>
+        </TouchableOpacity>
       )
     }
   }
@@ -124,5 +127,10 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     marginStart: 16
+  },
+  icon: {
+    height: 24,
+    width: 24,
+    marginEnd: 8
   }
 })

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {StyleSheet, View, Text, Alert, TextInput, Button, ActivityIndicator} from 'react-native'
+import {StyleSheet, View, Text, Alert, TextInput, ActivityIndicator, TouchableOpacity, Image} from 'react-native'
 
 export default class AddFeedComponent extends Component {
 
@@ -7,10 +7,13 @@ export default class AddFeedComponent extends Component {
     return {
       title: 'Add feed',
       headerRight: (
-        <Button
-          title='Create'
+        <TouchableOpacity
           disabled={navigation.getParam('progress')}
-          onPress={ () => navigation.getParam('onCreatePressed')()}/>
+          onPress={ () => navigation.getParam('onCreatePressed')()}>
+          <Image
+            style={styles.icon}
+            source={require('../resources/images/done.png')}/>
+        </TouchableOpacity>
       )
     }
   }
@@ -104,5 +107,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  icon: {
+    height: 24,
+    width: 24,
+    marginEnd: 8
   }
 })

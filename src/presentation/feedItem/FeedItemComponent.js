@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {StyleSheet, View, Text, Alert, Button, Share, ScrollView, Image} from 'react-native'
+import {StyleSheet, View, Text, Alert, TouchableOpacity, Share, ScrollView, Image} from 'react-native'
 
 export default class FeedItemComponent extends Component {
 
@@ -9,12 +9,18 @@ export default class FeedItemComponent extends Component {
       headerRight: (
         <View
           style={styles.rightHeaderContainer}>
-          <Button
-            title='Browser'
-            onPress={() => navigation.getParam('onOpenInBrowserPressed')()}/>
-          <Button
-            title='Share'
-            onPress={() => navigation.getParam('onSharePressed')()}/>
+          <TouchableOpacity
+            onPress={ () => navigation.getParam('onOpenInBrowserPressed')()}>
+            <Image
+              style={styles.icon}
+              source={require('../resources/images/browser.png')}/>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={ () => navigation.getParam('onSharePressed')()}>
+            <Image
+              style={styles.icon}
+              source={require('../resources/images/share.png')}/>
+          </TouchableOpacity>
         </View>
       )
     }
@@ -115,5 +121,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     margin: 16,
     marginTop: 0
+  },
+  icon: {
+    height: 24,
+    width: 24,
+    marginEnd: 8
   }
 })
