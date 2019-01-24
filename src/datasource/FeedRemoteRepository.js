@@ -1,5 +1,3 @@
-import { Observable } from '../domain/common/Observable'
-
 export default class FeedRemoteRepository {
 
   constructor(feedParser) {

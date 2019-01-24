@@ -1,4 +1,5 @@
-import Observable from '../../domain/common/Observable'
+import PublishSubject from '../../domain/common/PublishSubject'
+import BehaviourSubject from '../../domain/common/BehaviourSubject'
 
 export default class FeedItemViewModel {
 
@@ -6,9 +7,9 @@ export default class FeedItemViewModel {
     this.feedItemId = feedItemId
     this.feedService = feedService
     this.router = router
-    this.feedItem = new Observable()
-    this.loadFeedItemError = new Observable()
-    this.shareUrl = new Observable()
+    this.feedItem = new BehaviourSubject(null)
+    this.loadFeedItemError = new PublishSubject()
+    this.shareUrl = new PublishSubject()
   }
 
   onCreated() {

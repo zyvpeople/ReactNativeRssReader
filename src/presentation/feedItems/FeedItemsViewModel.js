@@ -1,4 +1,5 @@
-import Observable from '../../domain/common/Observable'
+import PublishSubject from '../../domain/common/PublishSubject'
+import BehaviourSubject from '../../domain/common/BehaviourSubject'
 
 export default class FeedItemsViewModel {
 
@@ -6,25 +7,25 @@ export default class FeedItemsViewModel {
     this.feedId = feedId
     this.feedService = feedService
     this.router = router
-    this.feedItems = new Observable()
-    this.progress = new Observable()
-    this.syncError = new Observable()
-    this.deleteFeedError = new Observable()
+    this.feedItems = new BehaviourSubject([])
+    this.progress = new BehaviourSubject(false)
+    this.syncError = new PublishSubject()
+    this.deleteFeedError = new PublishSubject()
     this._unsubscribeFeedItemsChanged = this
       .feedService
-      .feedItemsChangedObservable
+      .feedItemsChanged
       .subscribe(this._onFeedItemsChanged)
     this._unsubscribeSyncStatusChanged = this
       .feedService
-      .syncStatusChangedObservable
+      .syncStatusChanged
       .subscribe(this._onSyncStatusChanged)
-    this._unsubscribeSyncError = this
-      .feedService
-      .syncErrorObservable
-      .subscribe(() => this.syncError.onNext(null))
   }
 
   onCreated() {
+    this._unsubscribeSyncError = this
+      .feedService
+      .syncError
+      .subscribe(() => this.syncError.onNext(null))
     this.feedService.syncFeed(this.feedId)
     this._onFeedItemsChanged()
     this._onSyncStatusChanged()
@@ -36,13 +37,9 @@ export default class FeedItemsViewModel {
     this._unsubscribeSyncError()
   }
 
-  onRefresh = () => {
-    this.feedService.syncFeed(this.feedId)
-  }
+  onRefresh = () => this.feedService.syncFeed(this.feedId)
 
-  onFeedItemPressed = (component, feedItem) => {
-    this.router.goToFeedItem(component, feedItem.id)
-  }
+  onFeedItemPressed = (component, feedItem) => this.router.goToFeedItem(component, feedItem.id)
 
   onDeleteFeedPressed(component) {
     this
@@ -52,14 +49,11 @@ export default class FeedItemsViewModel {
       .catch(error => this.deleteFeedError.onNext(error))
   }
 
-  _onFeedItemsChanged = () => {
+  _onFeedItemsChanged = () =>
     this
       .feedService
       .feedItems(this.feedId)
       .then(items => this.feedItems.onNext(items))
-  }
 
-  _onSyncStatusChanged = () => {
-    this.progress.onNext(this.feedService.isSync)
-  }
+  _onSyncStatusChanged = () => this.progress.onNext(this.feedService.isSync)
 }

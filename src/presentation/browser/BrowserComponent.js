@@ -12,6 +12,9 @@ export default class BrowserComponent extends Component {
       url: null,
       progress: false
     }
+  }
+
+  componentDidMount() {
     this.unsubscribeFromUrl = this
       .browserViewModel
       .url
@@ -23,15 +26,11 @@ export default class BrowserComponent extends Component {
     this.unsubscribeFromLoadError = this
       .browserViewModel
       .loadError
-      .subscribe(event => {
+      .subscribe(event =>
         Alert.alert(
           'Error',
           'Error load url',
-          [{text:'Ok'}])
-      })
-  }
-
-  componentDidMount() {
+          [{text:'Ok'}]))
     this.browserViewModel.onCreated()
   }
 

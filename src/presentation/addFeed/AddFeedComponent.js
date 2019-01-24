@@ -23,6 +23,10 @@ export default class AddFeedComponent extends Component {
       feedUrl: ""
     }
     this.props.navigation.setParams({progress: false})
+  }
+
+  componentDidMount() {
+    this.props.navigation.setParams({ onCreatePressed: this._onCreatePressed });
     this.unsubscribeFromProgress = this
       .addFeedViewModel
       .progress
@@ -38,10 +42,6 @@ export default class AddFeedComponent extends Component {
           'Error',
           'Error create feed',
           [{text:'Ok'}]))
-  }
-
-  componentDidMount() {
-    this.props.navigation.setParams({ onCreatePressed: this._onCreatePressed });
     this.addFeedViewModel.onCreated()
   }
 

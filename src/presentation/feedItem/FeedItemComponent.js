@@ -26,6 +26,11 @@ export default class FeedItemComponent extends Component {
     this.state = {
       feedItem: null
     }
+  }
+
+  componentDidMount() {
+    this.props.navigation.setParams({onOpenInBrowserPressed: this._onOpenInBrowserPressed})
+    this.props.navigation.setParams({onSharePressed: this._onSharePressed})
     this.unsubscribeFromFeedItem = this
       .feedItemViewModel
       .feedItem
@@ -38,21 +43,15 @@ export default class FeedItemComponent extends Component {
           'Error',
           'Error load feed item',
           [{text:'Ok'}]))
-      this.unsubscribeFromShareUrl = this
-        .feedItemViewModel
-        .shareUrl
-        .subscribe(url => {
-          Share.share({
-            message: url,
-            url: url,
-            title: 'Share URL'
-          })
-        })
-  }
-
-  componentDidMount() {
-    this.props.navigation.setParams({onOpenInBrowserPressed: this._onOpenInBrowserPressed})
-    this.props.navigation.setParams({onSharePressed: this._onSharePressed})
+    this.unsubscribeFromShareUrl = this
+      .feedItemViewModel
+      .shareUrl
+      .subscribe(url =>
+        Share.share({
+          message: url,
+          url: url,
+          title: 'Share URL'
+        }))
     this.feedItemViewModel.onCreated()
   }
 

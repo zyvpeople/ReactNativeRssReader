@@ -1,4 +1,4 @@
-import Observable from '../domain/common/Observable'
+import PublishSubject from '../domain/common/PublishSubject'
 import Feed from '../domain/entity/Feed'
 import FeedItem from '../domain/entity/FeedItem'
 import SQLite from 'react-native-sqlite-storage'
@@ -6,8 +6,8 @@ import SQLite from 'react-native-sqlite-storage'
 export default class FeedLocalRepository {
   constructor(database, logger) {
     this.database = database
-    this.feedsChangedObservable = new Observable()
-    this.feedItemsChangedObservable = new Observable()
+    this.feedsChanged = new PublishSubject()
+    this.feedItemsChanged = new PublishSubject()
     this.db = SQLite.openDatabase(
       "rssReader.db",
       "1.0",
@@ -51,7 +51,7 @@ export default class FeedLocalRepository {
                                 [feed.title, feed.url]),
           error => reject(error),
           () => {
-            this.feedsChangedObservable.onNext(null)
+            this.feedsChanged.onNext(null)
             resolve(null)
           })
         )
@@ -67,7 +67,7 @@ export default class FeedLocalRepository {
           tx => tx.executeSql('DELETE FROM Feeds WHERE id = ?', [feedId]),
           error => reject(error),
           () => {
-            this.feedsChangedObservable.onNext(null)
+            this.feedsChanged.onNext(null)
             resolve(null)
           }))
       )
@@ -149,7 +149,7 @@ export default class FeedLocalRepository {
           },
           error => reject(error),
           () => {
-            this.feedItemsChangedObservable.onNext(null)
+            this.feedItemsChanged.onNext(null)
             resolve(null)
           })
         )

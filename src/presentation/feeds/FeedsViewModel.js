@@ -1,28 +1,29 @@
-import Observable from '../../domain/common/Observable'
+import PublishSubject from '../../domain/common/PublishSubject'
+import BehaviourSubject from '../../domain/common/BehaviourSubject'
 
 export default class FeedsViewModel {
 
   constructor(feedService, router) {
     this.feedService = feedService
     this.router = router
-    this.feeds = new Observable()
-    this.progress = new Observable()
-    this.syncError = new Observable()
+    this.feeds = new BehaviourSubject([])
+    this.progress = new BehaviourSubject(false)
+    this.syncError = new PublishSubject()
     this._unsubscribeFeedsChanged = this
       .feedService
-      .feedsChangedObservable
+      .feedsChanged
       .subscribe(this._onFeedsChanged)
     this._unsubscribeSyncStatusChanged = this
       .feedService
-      .syncStatusChangedObservable
+      .syncStatusChanged
       .subscribe(this._onSyncStatusChanged)
-    this._unsubscribeSyncError = this
-      .feedService
-      .syncErrorObservable
-      .subscribe(() => this.syncError.onNext(null))
   }
 
   onCreated() {
+    this._unsubscribeSyncError = this
+      .feedService
+      .syncError
+      .subscribe(() => this.syncError.onNext(null))
     this.feedService.syncAll()
     this._onFeedsChanged()
     this._onSyncStatusChanged()
@@ -34,26 +35,19 @@ export default class FeedsViewModel {
     this._unsubscribeSyncError()
   }
 
-  onRefresh = () => {
-    this.feedService.syncAll()
-  }
+  onRefresh = () => this.feedService.syncAll()
 
-  onFeedPressed = (component, feed) => {
-    this.router.goToFeedItems(component, feed.id)
-  }
+  onFeedPressed = (component, feed) => this.router.goToFeedItems(component, feed.id)
 
   onAddFeedPressed(component) {
     this.router.goToAddFeed(component)
   }
 
-  _onFeedsChanged = () => {
+  _onFeedsChanged = () =>
     this
       .feedService
       .feeds()
       .then(items => this.feeds.onNext(items))
-  }
 
-  _onSyncStatusChanged = () => {
-    this.progress.onNext(this.feedService.isSync)
-  }
+  _onSyncStatusChanged = () => this.progress.onNext(this.feedService.isSync)
 }

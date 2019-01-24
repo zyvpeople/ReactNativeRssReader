@@ -23,6 +23,10 @@ export default class FeedsComponent extends Component {
       feeds: [],
       refreshing: false
     }
+  }
+
+  componentDidMount() {
+    this.props.navigation.setParams({ onAddFeedPressed: this._onAddFeedPressed });
     this.unsubscribeFromFeeds = this
       .feedsViewModel
       .feeds
@@ -39,10 +43,6 @@ export default class FeedsComponent extends Component {
           'Error',
           'Error sync feeds',
           [{text:'Ok'}]))
-  }
-
-  componentDidMount() {
-    this.props.navigation.setParams({ onAddFeedPressed: this._onAddFeedPressed });
     this.feedsViewModel.onCreated()
   }
 

@@ -1,4 +1,4 @@
-export default class Observable {
+export default class PublishSubject {
   constructor() {
     this.observers = []
   }

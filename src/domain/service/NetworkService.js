@@ -1,9 +1,9 @@
-import Observable from '../common/Observable'
+import PublishSubject from '../common/PublishSubject'
 import { NetInfo, ConnectionType } from 'react-native'
 
 export default class NetworkService {
   constructor() {
-    this.onlineStatusChanged = new Observable()
+    this.onlineStatusChanged = new PublishSubject()
     this.isOnline = false
     NetInfo
       .isConnected

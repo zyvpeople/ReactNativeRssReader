@@ -1,18 +1,16 @@
-import Observable from '../../domain/common/Observable'
+import PublishSubject from '../../domain/common/PublishSubject'
+import BehaviourSubject from '../../domain/common/BehaviourSubject'
 
 export default class BrowserViewModel {
 
   constructor(url, router) {
-    this._url = url
     this.router = router
-    this.url = new Observable()
-    this.progress = new Observable()
-    this.loadError = new Observable()
+    this.url = new BehaviourSubject(url)
+    this.progress = new BehaviourSubject(false)
+    this.loadError = new PublishSubject()
   }
 
   onCreated() {
-    this.url.onNext(this._url)
-    this.progress.onNext(false)
   }
 
   onDestroyed() {

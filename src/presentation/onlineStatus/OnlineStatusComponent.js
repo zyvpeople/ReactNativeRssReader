@@ -7,13 +7,13 @@ export default class OnlineStatusComponent extends Component {
     super(props)
     this.state = { visible: false }
     this.onlineStatusViewModel = this.props.onlineStatusViewModel
+  }
+
+  componentDidMount() {
     this.unsubscribeFromViewModel = this
       .onlineStatusViewModel
       .visible
       .subscribe(visible => this.setState({ visible: visible}))
-  }
-
-  componentDidMount() {
     this.onlineStatusViewModel.onCreated()
   }
 

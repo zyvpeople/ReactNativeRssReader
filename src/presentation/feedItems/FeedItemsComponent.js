@@ -23,6 +23,10 @@ export default class FeedItemsComponent extends Component {
       feedItems: [],
       refreshing: false
     }
+  }
+
+  componentDidMount() {
+    this.props.navigation.setParams({ onDeleteFeedPressed: this._onDeleteFeedPressed });
     this.unsubscribeFromFeedItems = this
       .feedItemsViewModel
       .feedItems
@@ -39,18 +43,14 @@ export default class FeedItemsComponent extends Component {
           'Error',
           'Error sync feed',
           [{text:'Ok'}]))
-      this.unsubscribeFromDeleteFeedError = this
-        .feedItemsViewModel
-        .deleteFeedError
-        .subscribe(event =>
-          Alert.alert(
-            'Error',
-            'Error delete feed',
-            [{text:'Ok'}]))
-  }
-
-  componentDidMount() {
-    this.props.navigation.setParams({ onDeleteFeedPressed: this._onDeleteFeedPressed });
+    this.unsubscribeFromDeleteFeedError = this
+      .feedItemsViewModel
+      .deleteFeedError
+      .subscribe(event =>
+        Alert.alert(
+          'Error',
+          'Error delete feed',
+          [{text:'Ok'}]))
     this.feedItemsViewModel.onCreated()
   }
 

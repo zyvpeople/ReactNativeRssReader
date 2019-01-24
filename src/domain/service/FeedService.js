@@ -1,4 +1,4 @@
-import Observable from '../common/Observable'
+import PublishSubject from '../common/PublishSubject'
 
 export class FeedService {
   constructor(feedLocalRepository,
@@ -9,10 +9,10 @@ export class FeedService {
     this.feedRemoteRepository = feedRemoteRepository
     this.networkService = networkService
     this.logger = logger
-    this.feedsChangedObservable = feedLocalRepository.feedsChangedObservable
-    this.feedItemsChangedObservable = feedLocalRepository.feedItemsChangedObservable
-    this.syncStatusChangedObservable = new Observable()
-    this.syncErrorObservable = new Observable()
+    this.feedsChanged = feedLocalRepository.feedsChanged
+    this.feedItemsChanged = feedLocalRepository.feedItemsChanged
+    this.syncStatusChanged = new PublishSubject()
+    this.syncError = new PublishSubject()
     this.isSync = false
     networkService
       .onlineStatusChanged
@@ -38,7 +38,7 @@ export class FeedService {
       .then(event => this._setIsSyncAndNotify(false))
       .catch(error => {
         this._setIsSyncAndNotify(false)
-        this.syncErrorObservable.onNext(error)
+        this.syncError.onNext(error)
       })
   }
 
@@ -57,7 +57,7 @@ export class FeedService {
       .then(event => this._setIsSyncAndNotify(false))
       .catch(error => {
         this._setIsSyncAndNotify(false)
-        this.syncErrorObservable.onNext(error)
+        this.syncError.onNext(error)
       })
   }
 
@@ -94,6 +94,6 @@ export class FeedService {
 
   _setIsSyncAndNotify(isSync) {
     this.isSync = isSync
-    this.syncStatusChangedObservable.onNext(null)
+    this.syncStatusChanged.onNext(null)
   }
 }

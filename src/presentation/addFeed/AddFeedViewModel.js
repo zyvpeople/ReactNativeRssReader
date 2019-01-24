@@ -1,16 +1,16 @@
-import Observable from '../../domain/common/Observable'
+import PublishSubject from '../../domain/common/PublishSubject'
+import BehaviourSubject from '../../domain/common/BehaviourSubject'
 
 export default class AddFeedViewModel {
 
   constructor(feedService, router) {
     this.feedService = feedService
     this.router = router
-    this.progress = new Observable()
-    this.createFeedError = new Observable()
+    this.progress = new BehaviourSubject(false)
+    this.createFeedError = new PublishSubject()
   }
 
   onCreated() {
-    this.progress.onNext(false)
   }
 
   onDestroyed() {
