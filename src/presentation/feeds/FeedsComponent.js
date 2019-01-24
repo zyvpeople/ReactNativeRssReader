@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
 import {StyleSheet, FlatList, View, Text, TouchableOpacity, Alert, Image} from 'react-native'
 import OnlineStatusComponent from '../onlineStatus/OnlineStatusComponent'
+import {strings} from '../resources/locales/i18n'
 
 export default class FeedsComponent extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'Feeds',
+      title: strings("feeds"),
       headerRight: (
         <TouchableOpacity
           onPress={ () => navigation.getParam('onAddFeedPressed')()}>
@@ -43,9 +44,9 @@ export default class FeedsComponent extends Component {
       .syncError
       .subscribe(event =>
         Alert.alert(
-          'Error',
-          'Error sync feeds',
-          [{text:'Ok'}]))
+          strings("error"),
+          strings("errorSyncFeeds"),
+          [{text:strings("ok")}]))
     this.feedsViewModel.onCreated()
   }
 

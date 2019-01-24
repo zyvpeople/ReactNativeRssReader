@@ -1,0 +1,20 @@
+// en.json
+{
+  "feeds": "Feeds",
+  "addFeed": "Add feed",
+  "error": "Error",
+  "errorCreateFeed": "Error create feed",
+  "ok": "Ok",
+  "feedUrl": "Feed URL",
+  "enterFeedUrl": "Enter feed URL",
+  "browser": "Browser",
+  "errorLoadUrl": "Error load url",
+  "feedItem": "Feed item",
+  "errorLoadFeedItem": "Error load feed item",
+  "shareUrl": "Share URL",
+  "feedItems": "Feed items",
+  "errorSyncFeeds": "Error sync feeds",
+  "errorSyncFeed": "Error sync feed",
+  "errorDeleteFeed": "Error delete feed",
+  "noInternetConnection": "No Internet connection"
+}

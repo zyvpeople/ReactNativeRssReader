@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
 import {StyleSheet, View, Text, Alert, TextInput, ActivityIndicator, TouchableOpacity, Image} from 'react-native'
+import {strings} from '../resources/locales/i18n'
 
 export default class AddFeedComponent extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'Add feed',
+      title: strings('addFeed'),
       headerRight: (
         <TouchableOpacity
           disabled={navigation.getParam('progress')}
@@ -42,9 +43,9 @@ export default class AddFeedComponent extends Component {
       .createFeedError
       .subscribe(event =>
         Alert.alert(
-          'Error',
-          'Error create feed',
-          [{text:'Ok'}]))
+          strings('error'),
+          strings('errorCreateFeed'),
+          [{text:strings('ok')}]))
     this.addFeedViewModel.onCreated()
   }
 
@@ -68,11 +69,11 @@ export default class AddFeedComponent extends Component {
         pointerEvents={this.state.progress ? 'none' : 'auto'}>
         <Text
           style={styles.title}>
-          Feed URL
+          {strings('feedUrl')}
         </Text>
         <TextInput
           style={styles.input}
-          placeholder="Enter feed URL"
+          placeholder={strings('enterFeedUrl')}
           value={this.state.feedUrl}
           onChangeText={text => this.setState({feedUrl: text})}/>
         {progress}

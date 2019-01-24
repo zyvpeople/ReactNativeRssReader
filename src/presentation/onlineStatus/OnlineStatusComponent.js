@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {strings} from '../resources/locales/i18n'
 
 export default class OnlineStatusComponent extends Component {
 
@@ -26,7 +27,7 @@ export default class OnlineStatusComponent extends Component {
     if (this.state.visible) {
       return (
         <View style={styles.container}>
-          <Text style={styles.text}>No Internet connection</Text>
+          <Text style={styles.text}>{strings("noInternetConnection")}</Text>
         </View>
       )
     }

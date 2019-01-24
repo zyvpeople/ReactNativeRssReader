@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
 import {StyleSheet, View, WebView, Alert, ActivityIndicator } from 'react-native'
+import {strings} from '../resources/locales/i18n'
 
 export default class BrowserComponent extends Component {
 
-  static navigationOptions = { title: 'Browser' }
+  static navigationOptions = { title: strings('browser') }
 
   constructor(props) {
     super(props)
@@ -28,9 +29,9 @@ export default class BrowserComponent extends Component {
       .loadError
       .subscribe(event =>
         Alert.alert(
-          'Error',
-          'Error load url',
-          [{text:'Ok'}]))
+          strings('error'),
+          strings('errorLoadUrl'),
+          [{text:strings('ok')}]))
     this.browserViewModel.onCreated()
   }
 

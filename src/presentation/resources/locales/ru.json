@@ -1,0 +1,20 @@
+// ru.json
+{
+  "feeds": "Фиды",
+  "addFeed": "Добавить фид",
+  "error": "Ошибка",
+  "errorCreateFeed": "Ошибка создания фида",
+  "ok": "Ок",
+  "feedUrl": "URL фида",
+  "enterFeedUrl": "Введите URL фида",
+  "browser": "Браузер",
+  "errorLoadUrl": "Ошибка загрузки URL",
+  "feedItem": "Новость",
+  "errorLoadFeedItem": "Ошибка загрузки новости",
+  "shareUrl": "Розшарить URL",
+  "feedItems": "Новости",
+  "errorSyncFeeds": "Ошибка синхронизации фидов",
+  "errorSyncFeed": "Ошибка синхронизации фида",
+  "errorDeleteFeed": "Ошибка удаления фида",
+  "noInternetConnection": "Нет Интернет соединения"
+}

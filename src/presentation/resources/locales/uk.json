@@ -1,0 +1,20 @@
+// uk.json
+{
+  "feeds": "Фіди",
+  "addFeed": "Додати фід",
+  "error": "Помилка",
+  "errorCreateFeed": "Помилка створення фіда",
+  "ok": "Ок",
+  "feedUrl": "URL фіда",
+  "enterFeedUrl": "Введіть URL фіда",
+  "browser": "Браузер",
+  "errorLoadUrl": "Помилка завантаження URL",
+  "feedItem": "Новина",
+  "errorLoadFeedItem": "Помилка завантаження новини",
+  "shareUrl": "Розшарити URL",
+  "feedItems": "Новини",
+  "errorSyncFeeds": "Помилка синхронізації фідів",
+  "errorSyncFeed": "Помилка синхронізації фіда",
+  "errorDeleteFeed": "Помилка видалення фідів",
+  "noInternetConnection": "Інтернет з'єднання відсутнє"
+}

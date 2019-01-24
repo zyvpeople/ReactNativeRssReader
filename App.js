@@ -7,5 +7,4 @@ const router = new Router(viewModelFactory)
 
 export default router.component()
 
-//TODO: localize
 //TODO: create NativeFeedRemoteRepository

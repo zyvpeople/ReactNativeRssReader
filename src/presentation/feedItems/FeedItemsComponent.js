@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
 import {StyleSheet, FlatList, View, Text, TouchableOpacity, Alert, Image} from 'react-native'
 import OnlineStatusComponent from '../onlineStatus/OnlineStatusComponent'
+import {strings} from '../resources/locales/i18n'
 
 export default class FeedItemsComponent extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'Feed items',
+      title: strings('feedItems'),
       headerRight: (
         <TouchableOpacity
           onPress={ () => navigation.getParam('onDeleteFeedPressed')()}>
@@ -43,17 +44,17 @@ export default class FeedItemsComponent extends Component {
       .syncError
       .subscribe(event =>
         Alert.alert(
-          'Error',
-          'Error sync feed',
-          [{text:'Ok'}]))
+          strings('error'),
+          strings('errorSyncFeed'),
+          [{text:strings('ok')}]))
     this.unsubscribeFromDeleteFeedError = this
       .feedItemsViewModel
       .deleteFeedError
       .subscribe(event =>
         Alert.alert(
-          'Error',
-          'Error delete feed',
-          [{text:'Ok'}]))
+          strings('error'),
+          strings('errorDeleteFeed'),
+          [{text:strings('ok')}]))
     this.feedItemsViewModel.onCreated()
   }
 

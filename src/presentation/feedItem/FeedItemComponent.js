@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
 import {StyleSheet, View, Text, Alert, TouchableOpacity, Share, ScrollView, Image} from 'react-native'
+import {strings} from '../resources/locales/i18n'
 
 export default class FeedItemComponent extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'Feed item',
+      title: strings('feedItem'),
       headerRight: (
         <View
           style={styles.rightHeaderContainer}>
@@ -44,9 +45,9 @@ export default class FeedItemComponent extends Component {
       .loadFeedItemError
       .subscribe(event =>
         Alert.alert(
-          'Error',
-          'Error load feed item',
-          [{text:'Ok'}]))
+          strings("error"),
+          strings("errorLoadFeedItem"),
+          [{text:strings("ok")}]))
     this.unsubscribeFromShareUrl = this
       .feedItemViewModel
       .shareUrl
@@ -54,7 +55,7 @@ export default class FeedItemComponent extends Component {
         Share.share({
           message: url,
           url: url,
-          title: 'Share URL'
+          title: strings("shareUrl")
         }))
     this.feedItemViewModel.onCreated()
   }
