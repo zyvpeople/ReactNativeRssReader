@@ -117,7 +117,6 @@ const styles = StyleSheet.create({
     marginEnd: 16
   },
   image: {
-    backgroundColor:'#ff0000',
     height: 36,
     width: 36
   },
