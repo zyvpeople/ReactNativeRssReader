@@ -69,9 +69,18 @@ export default class FeedItemComponent extends Component {
         <Image
           style={styles.image}
           source={{uri: this.state.feedItem.imageUrl}}/>
-        <Text>{this.state.feedItem.title}</Text>
-        <Text>{new Date(this.state.feedItem.dateTime).toLocaleString()}</Text>
-        <Text>{this.state.feedItem.summary}</Text>
+        <Text
+          style={styles.title}>
+          {this.state.feedItem.title}
+        </Text>
+        <Text
+          style={styles.date}>
+          {new Date(this.state.feedItem.dateTime).toLocaleString()}
+        </Text>
+        <Text
+          style={styles.summary}>
+          {this.state.feedItem.summary}
+        </Text>
       </ScrollView>
     )
   }
@@ -91,5 +100,20 @@ const styles = StyleSheet.create({
   },
   image: {
     height: 200
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    margin: 16
+  },
+  date: {
+    fontSize: 16,
+    margin: 16,
+    marginTop: 0
+  },
+  summary: {
+    fontSize: 16,
+    margin: 16,
+    marginTop: 0
   }
 })

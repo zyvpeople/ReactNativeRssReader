@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {StyleSheet, FlatList, View, Text, TouchableOpacity, Alert, Button} from 'react-native'
+import {StyleSheet, FlatList, View, Text, TouchableOpacity, Alert, Button, Image} from 'react-native'
 import OnlineStatusComponent from '../onlineStatus/OnlineStatusComponent'
 
 export default class FeedItemsComponent extends Component {
@@ -66,6 +66,8 @@ export default class FeedItemsComponent extends Component {
     return (
       <View
         style={styles.container}>
+        <OnlineStatusComponent
+          onlineStatusViewModel={this.onlineStatusViewModel}/>
         <FlatList
           style={styles.list}
           data={this.state.feedItems}
@@ -81,9 +83,19 @@ export default class FeedItemsComponent extends Component {
 
   _renderItem = ({item}) =>
     <TouchableOpacity
-      style={styles.item}
       onPress={() => this.feedItemsViewModel.onFeedItemPressed(item)}>
-      <Text>{item.title}</Text>
+        <View
+          style={styles.item}>
+          <Image
+            style={styles.image}
+            source={{uri:item.imageUrl}}/>
+          <Text
+            style={styles.text}
+            numberOfLines={2}
+            ellipsizeMode={'tail'}>
+            {item.title}
+          </Text>
+        </View>
     </TouchableOpacity>
 
   _onDeleteFeedPressed = () => this.feedItemsViewModel.onDeleteFeedPressed()
@@ -94,9 +106,24 @@ const styles = StyleSheet.create({
     flex: 1
   },
   list: {
-    flex: 1
+    flex: 1,
+    marginTop: 8,
+    marginBottom: 8
   },
   item: {
-    height: 48
+    height: 48,
+    flexDirection: 'row',
+    marginStart: 16,
+    marginEnd: 16
+  },
+  image: {
+    backgroundColor:'#ff0000',
+    height: 36,
+    width: 36
+  },
+  text: {
+    flex: 1,
+    fontSize: 16,
+    marginStart: 16
   }
 })

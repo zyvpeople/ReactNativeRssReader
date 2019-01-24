@@ -57,6 +57,8 @@ export default class FeedsComponent extends Component {
     return (
       <View
         style={styles.container}>
+        <OnlineStatusComponent
+          onlineStatusViewModel={this.onlineStatusViewModel}/>
         <FlatList
           style={styles.list}
           data={this.state.feeds}
@@ -74,7 +76,12 @@ export default class FeedsComponent extends Component {
     <TouchableOpacity
       style={styles.item}
       onPress={() => this.feedsViewModel.onFeedPressed(item)}>
-      <Text>{item.title}</Text>
+      <Text
+        style={styles.text}
+        numberOfLines={1}
+        ellipsizeMode={'tail'}>
+        {item.title}
+      </Text>
     </TouchableOpacity>
 
   _onAddFeedPressed = () => this.feedsViewModel.onAddFeedPressed()
@@ -85,9 +92,16 @@ const styles = StyleSheet.create({
     flex: 1
   },
   list: {
-    flex: 1
+    flex: 1,
+    marginTop: 8
   },
   item: {
-    height: 48
+    height: 48,
+    justifyContent: 'center',
+    marginStart: 16,
+    marginEnd: 16
+  },
+  text: {
+    fontSize: 16
   }
 })

@@ -63,12 +63,15 @@ export default class AddFeedComponent extends Component {
       <View
         style={styles.container}
         pointerEvents={this.state.progress ? 'none' : 'auto'}>
-        <Text>Feed URL</Text>
+        <Text
+          style={styles.title}>
+          Feed URL
+        </Text>
         <TextInput
+          style={styles.input}
           placeholder="Enter feed URL"
           value={this.state.feedUrl}
-          onChangeText={text => this.setState({feedUrl: text})}
-          />
+          onChangeText={text => this.setState({feedUrl: text})}/>
         {progress}
       </View>
     )
@@ -80,6 +83,16 @@ export default class AddFeedComponent extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1
+  },
+  title: {
+    fontSize: 16,
+    margin: 16,
+    marginBottom: 8
+  },
+  input: {
+    fontSize: 16,
+    margin: 16,
+    marginTop: 0
   },
   loading: {
     position: 'absolute',
