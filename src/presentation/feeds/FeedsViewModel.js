@@ -37,10 +37,10 @@ export default class FeedsViewModel {
 
   onRefresh = () => this.feedService.syncAll()
 
-  onFeedPressed = (component, feed) => this.router.goToFeedItems(component, feed.id)
+  onFeedPressed = feed => this.router.goToFeedItems(feed.id)
 
-  onAddFeedPressed(component) {
-    this.router.goToAddFeed(component)
+  onAddFeedPressed() {
+    this.router.goToAddFeed()
   }
 
   _onFeedsChanged = () =>

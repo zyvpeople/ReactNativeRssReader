@@ -17,8 +17,8 @@ export default class FeedItemsComponent extends Component {
 
   constructor(props) {
     super(props)
-    this.feedItemsViewModel = this.props.feedItemsViewModel
-    this.onlineStatusViewModel = this.props.onlineStatusViewModel
+    this.feedItemsViewModel = this.props.navigation.getParam("feedItemsViewModel")
+    this.onlineStatusViewModel = this.props.navigation.getParam("onlineStatusViewModel")
     this.state = {
       feedItems: [],
       refreshing: false
@@ -82,11 +82,11 @@ export default class FeedItemsComponent extends Component {
   _renderItem = ({item}) =>
     <TouchableOpacity
       style={styles.item}
-      onPress={() => this.feedItemsViewModel.onFeedItemPressed(this, item)}>
+      onPress={() => this.feedItemsViewModel.onFeedItemPressed(item)}>
       <Text>{item.title}</Text>
     </TouchableOpacity>
 
-  _onDeleteFeedPressed = () => this.feedItemsViewModel.onDeleteFeedPressed(this)
+  _onDeleteFeedPressed = () => this.feedItemsViewModel.onDeleteFeedPressed()
 }
 
 const styles = StyleSheet.create({

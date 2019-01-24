@@ -29,11 +29,11 @@ export default class FeedItemViewModel {
   onDestroyed() {
   }
 
-  onOpenInBrowserPressed(component) {
+  onOpenInBrowserPressed() {
     if (this._feedItem === null) {
       return
     }
-    this.router.goToBrowser(component, this._feedItem.url)
+    this.router.goToBrowser(this._feedItem.url)
   }
 
   onSharePressed() {

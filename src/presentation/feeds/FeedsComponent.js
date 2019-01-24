@@ -73,11 +73,11 @@ export default class FeedsComponent extends Component {
   _renderItem = ({item}) =>
     <TouchableOpacity
       style={styles.item}
-      onPress={() => this.feedsViewModel.onFeedPressed(this, item)}>
+      onPress={() => this.feedsViewModel.onFeedPressed(item)}>
       <Text>{item.title}</Text>
     </TouchableOpacity>
 
-  _onAddFeedPressed = () => this.feedsViewModel.onAddFeedPressed(this)
+  _onAddFeedPressed = () => this.feedsViewModel.onAddFeedPressed()
 }
 
 const styles = StyleSheet.create({

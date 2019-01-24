@@ -39,13 +39,13 @@ export default class FeedItemsViewModel {
 
   onRefresh = () => this.feedService.syncFeed(this.feedId)
 
-  onFeedItemPressed = (component, feedItem) => this.router.goToFeedItem(component, feedItem.id)
+  onFeedItemPressed = feedItem => this.router.goToFeedItem(feedItem.id)
 
-  onDeleteFeedPressed(component) {
+  onDeleteFeedPressed() {
     this
       .feedService
       .removeFeed(this.feedId)
-      .then(event => this.router.goBack(component))
+      .then(event => this.router.goBack())
       .catch(error => this.deleteFeedError.onNext(error))
   }
 

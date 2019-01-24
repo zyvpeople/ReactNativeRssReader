@@ -16,14 +16,14 @@ export default class AddFeedViewModel {
   onDestroyed() {
   }
 
-  onCreatePressed(component, feedUrl) {
+  onCreatePressed(feedUrl) {
     this.progress.onNext(true)
     this
       .feedService
       .createFeed(feedUrl)
       .then(event => {
         this.progress.onNext(false)
-        this.router.goBack(component)
+        this.router.goBack()
       })
       .catch(error => {
         this.progress.onNext(false)

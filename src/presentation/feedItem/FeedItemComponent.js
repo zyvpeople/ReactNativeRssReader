@@ -22,10 +22,8 @@ export default class FeedItemComponent extends Component {
 
   constructor(props) {
     super(props)
-    this.feedItemViewModel = this.props.feedItemViewModel
-    this.state = {
-      feedItem: null
-    }
+    this.feedItemViewModel = this.props.navigation.getParam("feedItemViewModel")
+    this.state = { feedItem: null }
   }
 
   componentDidMount() {
@@ -78,7 +76,7 @@ export default class FeedItemComponent extends Component {
     )
   }
 
-  _onOpenInBrowserPressed = () => this.feedItemViewModel.onOpenInBrowserPressed(this)
+  _onOpenInBrowserPressed = () => this.feedItemViewModel.onOpenInBrowserPressed()
 
   _onSharePressed = () => this.feedItemViewModel.onSharePressed()
 }

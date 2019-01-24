@@ -17,7 +17,7 @@ export default class AddFeedComponent extends Component {
 
   constructor(props) {
     super(props)
-    this.addFeedViewModel = this.props.addFeedViewModel
+    this.addFeedViewModel = this.props.navigation.getParam("addFeedViewModel")
     this.state = {
       progress: false,
       feedUrl: ""
@@ -74,7 +74,7 @@ export default class AddFeedComponent extends Component {
     )
   }
 
-  _onCreatePressed = () => this.addFeedViewModel.onCreatePressed(this, this.state.feedUrl)
+  _onCreatePressed = () => this.addFeedViewModel.onCreatePressed(this.state.feedUrl)
 }
 
 const styles = StyleSheet.create({

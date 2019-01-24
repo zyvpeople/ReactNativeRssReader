@@ -7,7 +7,7 @@ export default class BrowserComponent extends Component {
 
   constructor(props) {
     super(props)
-    this.browserViewModel = this.props.browserViewModel
+    this.browserViewModel = this.props.navigation.getParam("browserViewModel")
     this.state = {
       url: null,
       progress: false
