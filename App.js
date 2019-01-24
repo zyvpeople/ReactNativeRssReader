@@ -8,3 +8,4 @@ const router = new Router(viewModelFactory)
 export default router.component()
 
 //TODO: create NativeFeedRemoteRepository
+//FIXME: progress is not hidden when app is new
