@@ -6,5 +6,3 @@ const viewModelFactory = serviceLocator.viewModelFactory
 const router = new Router(viewModelFactory)
 
 export default router.component()
-
-//TODO: create NativeHttpClient

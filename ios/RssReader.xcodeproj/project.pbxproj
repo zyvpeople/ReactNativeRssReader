@@ -41,6 +41,7 @@
 		37ADF68443EF4493AC48C788 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AD335AD85714AFB939D1B04 /* libRNGestureHandler.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
+		D27E233421FC3A3000DA698A /* NativeHttpClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D27E233321FC3A3000DA698A /* NativeHttpClient.m */; };
 		F64707C73F4B4E5CADF7830E /* libSQLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADB6B93702964544A695C470 /* libSQLite.a */; };
 /* End PBXBuildFile section */
 
@@ -381,6 +382,8 @@
 		A98A6615AB3648A590B8C92D /* libRNI18n.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNI18n.a; sourceTree = "<group>"; };
 		ADB6B93702964544A695C470 /* libSQLite.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSQLite.a; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
+		D27E233221FC3A3000DA698A /* NativeHttpClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NativeHttpClient.h; sourceTree = "<group>"; };
+		D27E233321FC3A3000DA698A /* NativeHttpClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NativeHttpClient.m; sourceTree = "<group>"; };
 		D2E5EA7B21F9ED7F00C7EA5D /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		D2E5EA7C21F9ED8500C7EA5D /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		DB3B3F9AE14C492EA870BDA4 /* libRNI18n-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNI18n-tvOS.a"; sourceTree = "<group>"; };
@@ -533,6 +536,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				D27E233221FC3A3000DA698A /* NativeHttpClient.h */,
+				D27E233321FC3A3000DA698A /* NativeHttpClient.m */,
 			);
 			name = RssReader;
 			sourceTree = "<group>";
@@ -1240,6 +1245,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				D27E233421FC3A3000DA698A /* NativeHttpClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

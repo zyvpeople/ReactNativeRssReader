@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.AlexanderZaytsev.RNI18n.RNI18nPackage;
+import com.rssreader.nativeHttpClient.NativeHttpClientPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -26,9 +27,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNI18nPackage(),
+          new RNI18nPackage(),
           new RNGestureHandlerPackage(),
-          new SQLitePluginPackage()
+          new SQLitePluginPackage(),
+          new NativeHttpClientPackage()
       );
     }
 

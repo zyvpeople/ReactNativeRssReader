@@ -1,6 +1,8 @@
 import FeedLocalRepository from '../datasource/FeedLocalRepository';
 import Database from '../datasource/Database';
 import XmlFeedParser from '../datasource/XmlFeedParser';
+import FetchHttpClient from '../datasource/httpClient/FetchHttpClient';
+import NativeHttpClient from '../datasource/httpClient/NativeHttpClient';
 import FeedRemoteRepository from '../datasource/FeedRemoteRepository';
 import Logger from '../datasource/Logger';
 import CompositeWriter from '../datasource/writer/CompositeWriter'
@@ -23,7 +25,9 @@ export default class ServiceLocator {
     const database = new Database(logger)
     const feedLocalRepository = new FeedLocalRepository(database, logger)
     const feedParser = new XmlFeedParser()
-    const feedRemoteRepository = new FeedRemoteRepository(feedParser)
+    const fetchHttpClient = new FetchHttpClient()
+    const nativeHttpClient = new NativeHttpClient()
+    const feedRemoteRepository = new FeedRemoteRepository(nativeHttpClient, feedParser)
     this.feedService = new FeedService(
       feedLocalRepository,
       feedRemoteRepository,
