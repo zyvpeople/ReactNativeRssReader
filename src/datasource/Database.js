@@ -3,6 +3,7 @@ import SQLite from 'react-native-sqlite-storage'
 
 export default class Database {
   constructor(logger) {
+    const tag = "Database"
     this._dbSubject = new BehaviourSubject(null)
     this._db = SQLite.openDatabase(
       "rssReader.db",
@@ -30,16 +31,16 @@ export default class Database {
                 ON DELETE CASCADE)`)
           },
           error => {
-            logger.e(error, 'Error create db')
+            logger.e(tag, 'Error create db', error)
             this._dbSubject.onNext({ failure: error })
           },
           () => {
-            logger.d('Db created')
+            logger.d(tag, 'Db created')
             this._dbSubject.onNext({ success: this._db })
           }
         ),
       error => {
-        logger.e(error, 'Error open db')
+        logger.e(tag, 'Error open db', error)
         this._dbSubject.onNext({ failure: error })
       }
     )

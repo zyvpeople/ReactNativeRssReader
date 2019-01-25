@@ -2,7 +2,9 @@ import PublishSubject from '../common/PublishSubject'
 import { NetInfo, ConnectionType } from 'react-native'
 
 export default class NetworkService {
-  constructor() {
+  constructor(logger) {
+    this.logger = logger
+    this.tag = "NetworkService"
     this.onlineStatusChanged = new PublishSubject()
     this.isOnline = false
     NetInfo
@@ -20,6 +22,7 @@ export default class NetworkService {
     if (this.isOnline == isConnected) {
       return
     }
+    this.logger.d(this.tag, `onlineStatusChanged. IsConnected = ${isConnected}.`)
     this.isOnline = isConnected
     this.onlineStatusChanged.onNext(null)
   }

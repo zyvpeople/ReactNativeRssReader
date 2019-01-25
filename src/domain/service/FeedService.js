@@ -9,6 +9,7 @@ export class FeedService {
     this.feedRemoteRepository = feedRemoteRepository
     this.networkService = networkService
     this.logger = logger
+    this.tag = "FeedService"
     this.feedsChanged = feedLocalRepository.feedsChanged
     this.feedItemsChanged = feedLocalRepository.feedItemsChanged
     this.syncStatusChanged = new PublishSubject()
@@ -35,8 +36,12 @@ export class FeedService {
       .feedLocalRepository
       .feeds()
       .then(feeds => Promise.all(feeds.map(async (feed) => this._syncFeed(feed))))
-      .then(event => this._setIsSyncAndNotify(false))
+      .then(event => {
+        this.logger.d(this.tag, "Success syncAll")
+        this._setIsSyncAndNotify(false)
+      })
       .catch(error => {
+        this.logger.e(this.tag, "Error syncAll", error)
         this._setIsSyncAndNotify(false)
         this.syncError.onNext(error)
       })
@@ -54,8 +59,12 @@ export class FeedService {
       .feedLocalRepository
       .findFeed(feedId)
       .then(feed => feed === null ? Promise.resolve(null) : this._syncFeed(feed))
-      .then(event => this._setIsSyncAndNotify(false))
+      .then(event => {
+        this.logger.d(this.tag, "Success syncFeed")
+        this._setIsSyncAndNotify(false)
+      })
       .catch(error => {
+        this.logger.e(this.tag, "Error syncFeed", error)
         this._setIsSyncAndNotify(false)
         this.syncError.onNext(error)
       })
@@ -95,5 +104,6 @@ export class FeedService {
   _setIsSyncAndNotify(isSync) {
     this.isSync = isSync
     this.syncStatusChanged.onNext(null)
+    this.logger.d(this.tag, `_setIsSyncAndNotify. IsSync: ${isSync}`)
   }
 }

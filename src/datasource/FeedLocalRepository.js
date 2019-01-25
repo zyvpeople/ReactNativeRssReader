@@ -6,38 +6,10 @@ import SQLite from 'react-native-sqlite-storage'
 export default class FeedLocalRepository {
   constructor(database, logger) {
     this.database = database
+    this.logger = logger
+    this.tag = "FeedLocalRepository"
     this.feedsChanged = new PublishSubject()
     this.feedItemsChanged = new PublishSubject()
-    this.db = SQLite.openDatabase(
-      "rssReader.db",
-      "1.0",
-      "RssReader",
-      200000,
-      () => this.db.transaction(
-          tx => {
-            tx.executeSql(`CREATE TABLE IF NOT EXISTS Feeds (
-              id INTEGER PRIMARY KEY AUTOINCREMENT,
-              title TEXT NOT NULL,
-              url TEXT NOT NULL UNIQUE)`)
-            tx.executeSql(`CREATE TABLE IF NOT EXISTS FeedItems (
-              id INTEGER PRIMARY KEY AUTOINCREMENT,
-              title TEXT NOT NULL,
-              summary TEXT NOT NULL,
-              dateTime INTEGER,
-              url TEXT NOT NULL,
-              imageUrl TEXT NOT NULL,
-              feedId INTEGER,
-              UNIQUE (url, feedId),
-              CONSTRAINT fk_feeds
-                FOREIGN KEY (feedId)
-                REFERENCES Feeds(id)
-                ON DELETE CASCADE)`)
-          },
-          error => logger.e(error, 'Error create db'),
-          () => logger.d('Db created')
-        ),
-      error => logger.e(error, 'Error open db')
-    )
   }
 
   async createOrUpdateFeed(feed) {
@@ -49,8 +21,12 @@ export default class FeedLocalRepository {
           tx => tx.executeSql(`INSERT OR REPLACE INTO Feeds (title,url)
                                 VALUES (?, ?)`,
                                 [feed.title, feed.url]),
-          error => reject(error),
+          error => {
+            this.logger.e(this.tag, "Error createOrUpdateFeed", error)
+            reject(error)
+          },
           () => {
+            this.logger.d(this.tag, "Success createOrUpdateFeed")
             this.feedsChanged.onNext(null)
             resolve(null)
           })
@@ -63,10 +39,14 @@ export default class FeedLocalRepository {
       .database
       .get()
       .then(db =>
-        new Promise((resolve, reject) => this.db.transaction(
+        new Promise((resolve, reject) => db.transaction(
           tx => tx.executeSql('DELETE FROM Feeds WHERE id = ?', [feedId]),
-          error => reject(error),
+          error => {
+            this.logger.e(this.tag, "Error removeFeed", error)
+            reject(error)
+          },
           () => {
+            this.logger.d(this.tag, "Success removeFeed")
             this.feedsChanged.onNext(null)
             resolve(null)
           }))
@@ -78,23 +58,29 @@ export default class FeedLocalRepository {
       .database
       .get()
       .then(db =>
-        new Promise((resolve, reject) => {
-          this.db.transaction(
+        new Promise((resolve, reject) =>
+          db.transaction(
             tx => tx.executeSql(
               'SELECT id, title, url FROM Feeds ORDER BY title ASC',
               [],
               (tx, results) => {
                 try {
-                  resolve(results
+                  const result = results
                     .rows
                     .raw()
-                    .map(row => new Feed(row.id, row.title, row.url)))
+                    .map(row => new Feed(row.id, row.title, row.url))
+                  this.logger.d(this.tag, "Success load feeds")
+                  resolve(result)
                 } catch (error) {
+                  this.logger.e(this.tag, "Error parse feeds", error)
                   reject(error)
                 }
             }),
-            error => reject(error))
-        })
+            error => {
+              this.logger.e(this.tag, "Error load feeds", error)
+              reject(error)
+            })
+        )
       )
   }
 
@@ -103,8 +89,8 @@ export default class FeedLocalRepository {
       .database
       .get()
       .then(db =>
-        new Promise((resolve, reject) => {
-          this.db.transaction(
+        new Promise((resolve, reject) =>
+          db.transaction(
             tx => {
               tx.executeSql(
                 'SELECT id, title, url FROM Feeds WHERE id = ? LIMIT 1',
@@ -113,17 +99,24 @@ export default class FeedLocalRepository {
                   try {
                     if (results.rows.length == 1) {
                       let row = results.rows.item(0)
-                      resolve(new Feed(row.id, row.title, row.url))
+                      let result = new Feed(row.id, row.title, row.url)
+                      this.logger.d(this.tag, "Success findFeed")
+                      resolve(result)
                     } else {
+                      this.logger.d(this.tag, "Success findFeed but feed is not found")
                       resolve(null)
                     }
                   } catch (error) {
+                    this.logger.e(this.tag, "Error parse feed", error)
                     reject(error)
                   }
               })
             },
-            error => reject(error))
-        })
+            error => {
+              this.logger.e(this.tag, "Error findFeed", error)
+              reject(error)
+            })
+        )
       )
   }
 
@@ -132,23 +125,25 @@ export default class FeedLocalRepository {
       .database
       .get()
       .then(db =>
-        new Promise((resolve, reject) => this.db.transaction(
-          tx => {
-            feedItems.forEach(feedItem =>
-              tx.executeSql(`INSERT OR REPLACE INTO FeedItems (
-                              title, summary, dateTime, url, imageUrl, feedId)
-                              VALUES (?, ?, ?, ?, ?, ?)`,
-                              [
-                                feedItem.title,
-                                feedItem.summary,
-                                feedItem.dateTime,
-                                feedItem.url,
-                                feedItem.imageUrl,
-                                feedItem.feedId])
-            )
+        new Promise((resolve, reject) => db.transaction(
+          tx => feedItems.forEach(feedItem =>
+            tx.executeSql(`INSERT OR REPLACE INTO FeedItems (
+                            title, summary, dateTime, url, imageUrl, feedId)
+                            VALUES (?, ?, ?, ?, ?, ?)`,
+                            [
+                              feedItem.title,
+                              feedItem.summary,
+                              feedItem.dateTime,
+                              feedItem.url,
+                              feedItem.imageUrl,
+                              feedItem.feedId])
+            ),
+          error => {
+            this.logger.e(this.tag, "Error createOrUpdateFeedItems", error)
+            reject(error)
           },
-          error => reject(error),
           () => {
+            this.logger.d(this.tag, "Success createOrUpdateFeedItems")
             this.feedItemsChanged.onNext(null)
             resolve(null)
           })
@@ -161,8 +156,8 @@ export default class FeedLocalRepository {
       .database
       .get()
       .then(db =>
-        new Promise((resolve, reject) => {
-          this.db.transaction(
+        new Promise((resolve, reject) =>
+          db.transaction(
             tx => {
               tx.executeSql(
                 `SELECT id, title, summary, dateTime, url, imageUrl, feedId
@@ -172,7 +167,7 @@ export default class FeedLocalRepository {
                 [feedId],
                 (tx, results) => {
                   try {
-                    resolve(results
+                    const result = results
                       .rows
                       .raw()
                       .map(row => new FeedItem(
@@ -182,15 +177,21 @@ export default class FeedLocalRepository {
                         row.dateTime,
                         row.url,
                         row.imageUrl,
-                        row.feedId)))
+                        row.feedId))
+                    this.logger.d(this.tag, "Success load feedItems")
+                    resolve(result)
                   } catch (error) {
+                    this.logger.e(this.tag, "Error parse feedItems", error)
                     reject(error)
                   }
               })
             },
-            error => reject(error)
+            error => {
+              this.logger.e(this.tag, "Error load feedItems", error)
+              reject(error)
+            }
           )
-        })
+        )
       )
   }
 
@@ -199,8 +200,8 @@ export default class FeedLocalRepository {
       .database
       .get()
       .then(db =>
-        new Promise((resolve, reject) => {
-          this.db.transaction(
+        new Promise((resolve, reject) =>
+          db.transaction(
             tx => {
               tx.executeSql(
                 `SELECT id, title, summary, dateTime, url, imageUrl, feedId
@@ -212,25 +213,32 @@ export default class FeedLocalRepository {
                   try {
                     if (results.rows.length == 1) {
                       let row = results.rows.item(0)
-                      resolve(new FeedItem(
+                      const result = new FeedItem(
                         row.id,
                         row.title,
                         row.summary,
                         row.dateTime,
                         row.url,
                         row.imageUrl,
-                        row.feedId))
+                        row.feedId)
+                      this.logger.d(this.tag, "Success findFeedItem")
+                      resolve(result)
                     } else {
+                      this.logger.d(this.tag, "Success findFeedItem but feedItem is not found")
                       resolve(null)
                     }
                   } catch (error) {
+                    this.logger.e(this.tag, "Error parse feedItem", error)
                     reject(error)
                   }
               })
             },
-            error => reject(error)
+            error => {
+              this.logger.e(this.tag, "Error findFeedItem", error)
+              reject(error)
+            }
           )
-        })
+        )
       )
   }
 }

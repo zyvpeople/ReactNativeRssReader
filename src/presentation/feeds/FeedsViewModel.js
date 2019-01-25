@@ -6,9 +6,13 @@ export default class FeedsViewModel {
   constructor(feedService, router) {
     this.feedService = feedService
     this.router = router
+    this.tag = "FeedsViewModel"
     this.feeds = new BehaviourSubject([])
     this.progress = new BehaviourSubject(false)
     this.syncError = new PublishSubject()
+  }
+
+  onCreated() {
     this._unsubscribeFeedsChanged = this
       .feedService
       .feedsChanged
@@ -17,9 +21,6 @@ export default class FeedsViewModel {
       .feedService
       .syncStatusChanged
       .subscribe(this._onSyncStatusChanged)
-  }
-
-  onCreated() {
     this._unsubscribeSyncError = this
       .feedService
       .syncError
@@ -49,5 +50,8 @@ export default class FeedsViewModel {
       .feeds()
       .then(items => this.feeds.onNext(items))
 
-  _onSyncStatusChanged = () => this.progress.onNext(this.feedService.isSync)
+  _onSyncStatusChanged = () => {
+    const isSync = this.feedService.isSync
+    this.progress.onNext(isSync)
+  }
 }

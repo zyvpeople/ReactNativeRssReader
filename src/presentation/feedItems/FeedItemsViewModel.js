@@ -11,6 +11,9 @@ export default class FeedItemsViewModel {
     this.progress = new BehaviourSubject(false)
     this.syncError = new PublishSubject()
     this.deleteFeedError = new PublishSubject()
+  }
+
+  onCreated() {
     this._unsubscribeFeedItemsChanged = this
       .feedService
       .feedItemsChanged
@@ -19,9 +22,6 @@ export default class FeedItemsViewModel {
       .feedService
       .syncStatusChanged
       .subscribe(this._onSyncStatusChanged)
-  }
-
-  onCreated() {
     this._unsubscribeSyncError = this
       .feedService
       .syncError
