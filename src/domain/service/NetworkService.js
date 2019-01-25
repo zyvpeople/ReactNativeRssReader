@@ -17,6 +17,9 @@ export default class NetworkService {
   }
 
   _handleConnectionStateChanged = isConnected => {
+    if (this.isOnline == isConnected) {
+      return
+    }
     this.isOnline = isConnected
     this.onlineStatusChanged.onNext(null)
   }
